@@ -1,0 +1,101 @@
+FUNCTION_BLOCK 
+
+VAR_INPUT
+View: REAL;
+Size: REAL;
+NumberOfBedrooms: REAL;
+Facilities: REAL;
+TransportationAccess: REAL;
+END_VAR
+
+VAR_OUTPUT
+Price: REAL;
+END_VAR
+
+FUZZIFY View
+RANGE := (0.100 .. 0.900);
+TERM StreetView := Triangle (0.100, 0.200, 0.400);
+TERM MarinaView := Triangle (0.300, 0.500, 0.700);
+TERM SeaView := Triangle (0.600, 0.800, 0.900);
+END_FUZZIFY
+
+FUZZIFY Size
+RANGE := (0.000 .. 3000.000);
+TERM Small := Trapezoid (0.000, 500.000, 1000.000, 1500.000);
+TERM Moderate := Trapezoid (250.000, 750.000, 1250.000, 1750.000);
+TERM Spacious := Trapezoid (1000.000, 1500.000, 2000.000, 2500.000);
+TERM Large := Trapezoid (2000.000, 2500.000, 3000.000, 3000.000);
+END_FUZZIFY
+
+FUZZIFY NumberOfBedrooms
+RANGE := (0.100 .. 0.900);
+TERM Studio := Triangle (0.100, 0.020, 0.400);
+TERM OneBedroom := Triangle (0.200, 0.400, 0.600);
+TERM TwoBedroom := Triangle (0.400, 0.600, 0.800);
+TERM ThreeBedrooms := Triangle (0.600, 0.800, 0.900);
+END_FUZZIFY
+
+FUZZIFY Facilities
+RANGE := (0.100 .. 0.900);
+TERM None := Triangle (0.100, 0.200, 0.400);
+TERM Gym := Triangle (0.300, 0.500, 0.700);
+TERM Pool := Triangle (0.600, 0.800, 0.900);
+END_FUZZIFY
+
+FUZZIFY TransportationAccess
+RANGE := (0.100 .. 0.900);
+TERM None := Triangle (0.100, 0.200, 0.400);
+TERM Tram := Triangle (0.300, 0.500, 0.700);
+TERM Metro := Triangle (0.600, 0.800, 0.900);
+END_FUZZIFY
+
+DEFUZZIFY Price
+RANGE := (0.000 .. 250000.000);
+TERM Low := Trapezoid (0.000, 50000.000, 100000.000, 150000.000);
+TERM Average := Trapezoid (50000.000, 100000.000, 150000.000, 200000.000);
+TERM High := Trapezoid (100000.000, 150000.000, 200000.000, 250000.000);
+TERM Expensive := Trapezoid (150000.000, 200000.000, 250000.000, 250000.000);
+
+METHOD : COG;
+ACCU : MAX;
+DEFAULT := 0.000;
+END_DEFUZZIFY
+
+RULEBLOCK 
+AND : MIN;
+OR : MAX;
+ACT : MIN;
+
+RULE 1 : if View is StreetView and Size is Small and NumberOfBedrooms is Studio and Facilities is None and TransportationAccess is Tram then Price is Low
+RULE 2 : if View is StreetView and Size is Small and NumberOfBedrooms is OneBedroom and Facilities is Gym and TransportationAccess is None then Price is Low
+RULE 3 : if View is StreetView and Size is Moderate and NumberOfBedrooms is TwoBedroom and Facilities is Gym and TransportationAccess is Metro then Price is Average
+RULE 4 : if View is StreetView and Size is Spacious and NumberOfBedrooms is ThreeBedrooms and Facilities is Pool and TransportationAccess is Metro then Price is High
+RULE 5 : if View is StreetView and Size is Large and NumberOfBedrooms is TwoBedroom and Facilities is None and TransportationAccess is None then Price is Average
+RULE 6 : if View is StreetView and Size is Large and NumberOfBedrooms is ThreeBedrooms and Facilities is Gym and TransportationAccess is None then Price is High
+RULE 7 : if View is MarinaView and Size is Small and NumberOfBedrooms is Studio and Facilities is Pool and TransportationAccess is Metro then Price is Average
+RULE 8 : if View is MarinaView and Size is Small and NumberOfBedrooms is OneBedroom and Facilities is None and TransportationAccess is Tram then Price is Low
+RULE 9 : if View is MarinaView and Size is Moderate and NumberOfBedrooms is OneBedroom and Facilities is Pool and TransportationAccess is Tram then Price is Average
+RULE 10 : if View is MarinaView and Size is Moderate and NumberOfBedrooms is TwoBedroom and Facilities is Gym and TransportationAccess is Tram then Price is High
+RULE 11 : if View is MarinaView and Size is Spacious and NumberOfBedrooms is Studio and Facilities is None and TransportationAccess is None then Price is Low
+RULE 12 : if View is MarinaView and Size is Spacious and NumberOfBedrooms is OneBedroom and Facilities is Gym and TransportationAccess is None then Price is Average
+RULE 13 : if View is MarinaView and Size is Spacious and NumberOfBedrooms is TwoBedroom and Facilities is None and TransportationAccess is Tram then Price is Expensive
+RULE 14 : if View is MarinaView and Size is Large and NumberOfBedrooms is Studio and Facilities is Pool and TransportationAccess is None then Price is Average
+RULE 15 : if View is MarinaView and Size is Large and NumberOfBedrooms is OneBedroom and Facilities is None and TransportationAccess is Metro then Price is Average
+RULE 16 : if View is MarinaView and Size is Large and NumberOfBedrooms is TwoBedroom and Facilities is Gym and TransportationAccess is Tram then Price is High
+RULE 17 : if View is MarinaView and Size is Large and NumberOfBedrooms is ThreeBedrooms and Facilities is Pool and TransportationAccess is Metro then Price is Expensive
+RULE 18 : if View is SeaView and Size is Small and NumberOfBedrooms is Studio and Facilities is Gym and TransportationAccess is Tram then Price is Average
+RULE 19 : if View is SeaView and Size is Small and NumberOfBedrooms is TwoBedroom and Facilities is Pool and TransportationAccess is None then Price is High
+RULE 20 : if View is SeaView and Size is Small and NumberOfBedrooms is ThreeBedrooms and Facilities is Gym and TransportationAccess is Metro then Price is Average
+RULE 21 : if View is SeaView and Size is Moderate and NumberOfBedrooms is OneBedroom and Facilities is Gym and TransportationAccess is Metro then Price is High
+RULE 22 : if View is SeaView and Size is Moderate and NumberOfBedrooms is TwoBedroom and Facilities is Pool and TransportationAccess is None then Price is Average
+RULE 23 : if View is SeaView and Size is Moderate and NumberOfBedrooms is ThreeBedrooms and Facilities is None and TransportationAccess is Tram then Price is High
+RULE 24 : if View is SeaView and Size is Spacious and NumberOfBedrooms is Studio and Facilities is None and TransportationAccess is Tram then Price is Low
+RULE 25 : if View is SeaView and Size is Spacious and NumberOfBedrooms is OneBedroom and Facilities is Pool and TransportationAccess is Tram then Price is High
+RULE 26 : if View is SeaView and Size is Spacious and NumberOfBedrooms is TwoBedroom and Facilities is None and TransportationAccess is Metro then Price is High
+RULE 27 : if View is SeaView and Size is Large and NumberOfBedrooms is Studio and Facilities is None and TransportationAccess is Metro then Price is Average
+RULE 28 : if View is SeaView and Size is Large and NumberOfBedrooms is OneBedroom and Facilities is None and TransportationAccess is None then Price is Average
+RULE 29 : if View is SeaView and Size is Large and NumberOfBedrooms is TwoBedroom and Facilities is Gym and TransportationAccess is Tram then Price is High
+RULE 30 : if View is SeaView and Size is Large and NumberOfBedrooms is ThreeBedrooms and Facilities is Pool and TransportationAccess is Metro then Price is Expensive
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1501711278 source:c:\users\yousry\documents\codeblocks\csci323-project\main.cpp
+	<iostream>
+	<algorithm>
+	<Max.h>
+	<Min.h>
+
+1501711218 source:c:\users\yousry\documents\codeblocks\csci323-project\src\max.cpp
+	"Max.h"
+
+1501715341 c:\users\yousry\documents\codeblocks\csci323-project\include\max.h
+
+1501715585 c:\users\yousry\documents\codeblocks\csci323-project\include\min.h
+
+1501715586 source:c:\users\yousry\documents\codeblocks\csci323-project\src\min.cpp
+	"Min.h"
+
